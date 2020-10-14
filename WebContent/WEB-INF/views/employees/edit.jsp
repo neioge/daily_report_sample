@@ -11,6 +11,7 @@
                     <c:import url="_form.jsp" />
                 </form>
 
+                <%-- ニュービューとは違い、削除機能も用意する --%>
                 <p><a href="#" onclick="confirmDestroy();">この従業員情報を削除する</a></p>
                 <form method="POST" action="<c:url value='/employees/destroy' />">
                     <input type="hidden" name="_token" value="${_token}" />
