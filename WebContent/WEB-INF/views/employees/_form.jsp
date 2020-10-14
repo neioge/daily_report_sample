@@ -16,11 +16,11 @@
 
 <%-- 各部品　ラベルと入力するところ --%>
 <label for="code">社員番号</label><br />
-<input type="text" name="code" value="${employee.code}" />
+<input type="text" name="code" value="${employee.code}" />  <%-- 編集の際、元々の値を表示するためにスコープから取得して表示 --%>
 <br /><br />
 
 <label for="name">氏名</label><br />
-<input type="text" name="name" value="${employee.name}" />
+<input type="text" name="name" value="${employee.name}" />  <%-- 編集の際、元々の値を表示するためにスコープから取得して表示 --%>
 <br /><br />
 
 <label for="password">パスワード</label><br />
