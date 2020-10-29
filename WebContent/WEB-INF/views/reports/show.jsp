@@ -37,7 +37,7 @@
                         </tr>
                         <tr>
                             <th>いいね数</th>
-                            <td><c:out value="#" /></td>
+                            <td><c:out value="${ likes_count }" /></td>
                         </tr>
                     </tbody>
                 </table>
@@ -46,8 +46,20 @@
                     <p><a href="<c:url value="/reports/edit?id=${report.id}" />">この日報を編集する</a></p>
                 </c:if>
                 <c:if test="${sessionScope.login_employee.id != report.employee.id}">
-                    <%-- ログイン中従業員IDと参照中日報IDをカラムに持ついいねレコードがあれば、いいね済みと表示する。 --%>
-                    <%-- それがなければ、いいねボタンを表示する。 --%>
+                    <c:choose>
+                        <c:when  test="${ checkSameLikeFlag }">
+                            <form method="POST" action="/daily_report_sample/likes/destroy">
+                                <input type = "hidden" name="_token" value="${_token }" />
+                                <button type="submit">いいね済み</button>
+                            </form>
+                        </c:when>
+                        <c:otherwise>
+                            <form method="POST" action="/daily_report_sample/likes/update">
+                                <input type = "hidden" name="_token" value="${_token }" />
+                                <button type="submit">いいね</button>
+                            </form>
+                        </c:otherwise>
+                    </c:choose>
                 </c:if>
             </c:when>
             <c:otherwise>

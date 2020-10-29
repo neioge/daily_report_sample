@@ -9,9 +9,22 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
 @Table(name = "likes")
+
+@NamedQueries({
+    @NamedQuery(
+            name = "checkLikeEmployeeAndReport",
+            query = "SELECT l FROM Like AS l WHERE l.employee = :employee AND l.report = :report"
+    ),
+    @NamedQuery(
+            name = "getReport'sLikeCount",
+            query = "SELECT COUNT(l) FROM Like AS l WHERE l.report = :report"
+    )
+})
 
 @Entity
 public class Like {

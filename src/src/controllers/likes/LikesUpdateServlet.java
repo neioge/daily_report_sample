@@ -33,17 +33,18 @@ public class LikesUpdateServlet extends HttpServlet {
             // いや、それを言ったらIDも同じか。別に入りっぱなしでも、別のレポートを参照すればセッションスコープが更新されるから問題ないか。じゃないや、最後にリムーブするから。ということでなおしてみる。
 
             // いいねインスタンスを作成する。
-            Like like = new Like();
+            Like l = new Like();
 
             // いいねインスタンスのプロパティに、4つの情報をセットする。
-            like.setEmployee((Employee)request.getSession().getAttribute("login_employee"));
-            like.setReport((Report)request.getSession().getAttribute("report"));
+            l.setEmployee((Employee)request.getSession().getAttribute("login_employee"));
+            l.setReport((Report)request.getSession().getAttribute("report"));
             Timestamp currentTime = new Timestamp(System.currentTimeMillis());
-            like.setCreated_at(currentTime);
-            like.setUpdated_at(currentTime);
+            l.setCreated_at(currentTime);
+            l.setUpdated_at(currentTime);
 
             // データベースに接続し、上記の変更点をコミットする。
             em.getTransaction().begin();
+            em.persist(l);
             em.getTransaction().commit();
             em.close();
             request.getSession().setAttribute("flush", "いいねしました");
