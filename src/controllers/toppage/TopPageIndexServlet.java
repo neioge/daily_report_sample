@@ -40,6 +40,13 @@ public class TopPageIndexServlet extends HttpServlet {
                                   .setMaxResults(15)
                                   .getResultList();
 
+        for (Report report : reports) {
+            long liked_count =em.createNamedQuery("getReport'sLikeCount", Long.class)
+                    .setParameter("report", report)
+                    .getSingleResult();
+            report.setReport_liked((int)liked_count);
+        }
+
         long reports_count = (long)em.createNamedQuery("getMyReportsCount", Long.class)
                                      .setParameter("employee", login_employee)
                                      .getSingleResult();

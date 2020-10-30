@@ -27,9 +27,8 @@ public class ReportsShowServlet extends HttpServlet {
         EntityManager em = DBUtil.createEntityManager();
 
         Report r = em.find(Report.class, Integer.parseInt(request.getParameter("id")));
-        Employee e = (Employee)request.getSession().getAttribute("login_employee");
 
-        // いいねの数をデータベースから取得して、変数likes_countに格納する。　SQLでwhere以降、つまり条件式として必要なのはr.id。そちらを用意して引数として渡す必要がある。
+        // いいねの数をデータベースから取得して、変数likes_countに格納する。SQLでwhere以降、つまり条件式として必要なのはr.id。そちらを用意して引数として渡す必要がある。
         long likes_count =em.createNamedQuery("getReport'sLikeCount", Long.class)
                              .setParameter("report", r)
                              .getSingleResult();
@@ -39,7 +38,7 @@ public class ReportsShowServlet extends HttpServlet {
         Like l = null;
         try {
                 l = em.createNamedQuery("checkLikeEmployeeAndReport", Like.class)
-                      .setParameter("employee", e)
+                      .setParameter("employee", (Employee)request.getSession().getAttribute("login_employee"))
                       .setParameter("report", r)
                       .getSingleResult();
         } catch(NoResultException ex) {}

@@ -55,6 +55,9 @@ public class Report {
     @Column(name = "content", nullable = false)
     private String content;
 
+    @Column(name = "report_liked", nullable = false)
+    private Integer report_liked;
+
     @Column(name = "created_at", nullable = false)
     private Timestamp created_at;
 
@@ -99,6 +102,14 @@ public class Report {
 
     public void setContent(String content) {
         this.content = content;
+    }
+
+    public Integer getReport_liked() {
+        return report_liked;
+    }
+
+    public void setReport_liked(Integer report_liked) {
+        this.report_liked = report_liked;
     }
 
     public Timestamp getCreated_at() {

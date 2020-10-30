@@ -54,7 +54,7 @@
                             </form>
                         </c:when>
                         <c:otherwise>
-                            <form method="POST" action="/daily_report_sample/likes/update">
+                            <form method="POST" action="/daily_report_sample/likes/create">
                                 <input type = "hidden" name="_token" value="${_token }" />
                                 <button type="submit">いいね</button>
                             </form>

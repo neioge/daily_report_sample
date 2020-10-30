@@ -29,12 +29,26 @@ public class LikesDestroyServlet extends HttpServlet {
             EntityManager em = DBUtil.createEntityManager();
 
             Employee e = (Employee)request.getSession().getAttribute("login_employee");
-            Report r = (Report)request.getSession().getAttribute("report");
 
             Like l = em.createNamedQuery("checkLikeEmployeeAndReport", Like.class)
                     .setParameter("employee", e)
-                    .setParameter("report", r)
+                    .setParameter("report", (Report)request.getSession().getAttribute("report"))
                     .getSingleResult();
+
+            // index画面でいいね数を表示させるために用意したReportインスタンスのプロパティreport_likedを、１減らした最新の値に更新する。
+            /*
+            Report r = (Report)request.getSession().getAttribute("report");
+            int liked_count = r.getReport_liked();
+            liked_count--;
+            r.setReport_liked(liked_count);
+            */
+
+            long liked_count =em.createNamedQuery("getReport'sLikeCount", Long.class)
+                    .setParameter("report", (Report)request.getSession().getAttribute("report"))
+                    .getSingleResult();
+
+            Report r = (Report)request.getSession().getAttribute("report");
+            r.setReport_liked((int)liked_count);
 
             em.getTransaction().begin();
             em.remove(l);

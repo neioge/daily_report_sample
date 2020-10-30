@@ -15,10 +15,10 @@ import src.models.Like;
 import src.models.Report;
 import src.utils.DBUtil;
 
-@WebServlet("/likes/update")
-public class LikesUpdateServlet extends HttpServlet {
+@WebServlet("/likes/create")
+public class LikesCreateServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    public LikesUpdateServlet() {
+    public LikesCreateServlet() {
         super();
     }
 
@@ -27,10 +27,6 @@ public class LikesUpdateServlet extends HttpServlet {
         String _token = (String)request.getParameter("_token");
         if(_token != null && _token.equals(request.getSession().getId())) {
             EntityManager em = DBUtil.createEntityManager();
-
-            // 今回は、レポートのIDをセッションで取得してインスタンス化して、ライクのプロパティに代入したけど、ほかの方法としてReportShowServletの時点で日報ごとセッションに入れておく、という方法もある。そっちのほうがこちらのコードはすっきりする気がする。
-            // いや、その方法だと、もしいいねボタンを押さなかった場合にセッションを消す処理がないためあまりよくないと思う。ReportsShowServletからレポートIDを渡すこちらが無難だと思う。
-            // いや、それを言ったらIDも同じか。別に入りっぱなしでも、別のレポートを参照すればセッションスコープが更新されるから問題ないか。じゃないや、最後にリムーブするから。ということでなおしてみる。
 
             // いいねインスタンスを作成する。
             Like l = new Like();
@@ -42,6 +38,22 @@ public class LikesUpdateServlet extends HttpServlet {
             l.setCreated_at(currentTime);
             l.setUpdated_at(currentTime);
 
+            // index画面でいいね数を表示させるために用意したReportインスタンスのプロパティreport_likedを、１増やした最新の値に更新する。
+            /*
+            Report r = (Report)request.getSession().getAttribute("report");
+            int liked_count = r.getReport_liked();
+            liked_count++;
+            r.setReport_liked(liked_count);
+             */
+
+            /*
+             long liked_count =em.createNamedQuery("getReport'sLikeCount", Long.class)
+                    .setParameter("report", (Report)request.getSession().getAttribute("report"))
+                    .getSingleResult();
+            Report r = (Report)request.getSession().getAttribute("report");
+            r.setReport_liked((int)liked_count);
+            */
+
             // データベースに接続し、上記の変更点をコミットする。
             em.getTransaction().begin();
             em.persist(l);
@@ -49,7 +61,6 @@ public class LikesUpdateServlet extends HttpServlet {
             em.close();
             request.getSession().setAttribute("flush", "いいねしました");
 
-            // indexにリダイレクトする。
             request.getSession().removeAttribute("report");
             response.sendRedirect(request.getContextPath() + "/reports/index");
         }
