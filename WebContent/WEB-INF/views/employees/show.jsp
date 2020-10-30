@@ -43,6 +43,23 @@
                     </tbody>
                 </table>
 
+                <c:if test="${sessionScope.login_employee.id != sessionScope.checking_employee.id}">
+                    <c:choose>
+                        <c:when  test="${ checkSameRelationshipFlag }">
+                            <form method="POST" action="/daily_report_sample/relationships/destroy">
+                                <input type = "hidden" name="_token" value="${_token }" />
+                                <button type="submit">フォロー済み</button>
+                            </form>
+                        </c:when>
+                        <c:otherwise>
+                            <form method="POST" action="/daily_report_sample/relationships/create">
+                                <input type = "hidden" name="_token" value="${_token }" />
+                                <button type="submit">フォローする</button>
+                            </form>
+                        </c:otherwise>
+                    </c:choose>
+                </c:if>
+
                 <p><a href="<c:url value='/employees/edit?id=${employee.id}' />">この従業員情報を編集する</a></p>
             </c:when>
             <c:otherwise>

@@ -28,10 +28,8 @@ public class LikesDestroyServlet extends HttpServlet {
         if(_token != null && _token.equals(request.getSession().getId())){
             EntityManager em = DBUtil.createEntityManager();
 
-            Employee e = (Employee)request.getSession().getAttribute("login_employee");
-
             Like l = em.createNamedQuery("checkLikeEmployeeAndReport", Like.class)
-                    .setParameter("employee", e)
+                    .setParameter("employee", (Employee)request.getSession().getAttribute("login_employee"))
                     .setParameter("report", (Report)request.getSession().getAttribute("report"))
                     .getSingleResult();
 
@@ -43,12 +41,13 @@ public class LikesDestroyServlet extends HttpServlet {
             r.setReport_liked(liked_count);
             */
 
+            /*
             long liked_count =em.createNamedQuery("getReport'sLikeCount", Long.class)
                     .setParameter("report", (Report)request.getSession().getAttribute("report"))
                     .getSingleResult();
-
             Report r = (Report)request.getSession().getAttribute("report");
             r.setReport_liked((int)liked_count);
+            */
 
             em.getTransaction().begin();
             em.remove(l);

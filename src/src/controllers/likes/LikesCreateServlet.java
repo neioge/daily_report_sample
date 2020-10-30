@@ -23,12 +23,11 @@ public class LikesCreateServlet extends HttpServlet {
     }
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-        // 1.CSRF対策
+
         String _token = (String)request.getParameter("_token");
         if(_token != null && _token.equals(request.getSession().getId())) {
             EntityManager em = DBUtil.createEntityManager();
 
-            // いいねインスタンスを作成する。
             Like l = new Like();
 
             // いいねインスタンスのプロパティに、4つの情報をセットする。

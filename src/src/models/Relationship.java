@@ -18,7 +18,7 @@ import javax.persistence.Table;
 @NamedQueries({
     @NamedQuery(
             name = "checkRelationship",
-            query = "SELECT r FROM Relationship AS r WHERE r.following = :followingEmployee AND r.followed = :following"
+            query = "SELECT r FROM Relationship AS r WHERE r.following = :following AND r.followed = :followed"
     ),
     @NamedQuery(
             name = "getAllFollowing",
