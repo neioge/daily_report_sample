@@ -5,6 +5,7 @@
 		<class>src.models.Employee</class>
 		<class>src.models.Report</class>
 		<class>src.models.Like</class>
+		<class>src.models.Relationship</class>
 		<properties>
 			<property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
 			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost/daily_report_sample?useSSL=false&amp;useUnicode=true&amp;characterEncoding=utf8"/>
