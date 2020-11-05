@@ -30,7 +30,7 @@ public class LikesDestroyServlet extends HttpServlet {
 
             Like l = em.createNamedQuery("checkLikeEmployeeAndReport", Like.class)
                     .setParameter("employee", (Employee)request.getSession().getAttribute("login_employee"))
-                    .setParameter("report", (Report)request.getSession().getAttribute("report"))
+                    .setParameter("report" , em.find(Report.class , Integer.parseInt(request.getParameter("_destroyLike"))) )
                     .getSingleResult();
 
             // index画面でいいね数を表示させるために用意したReportインスタンスのプロパティreport_likedを、１減らした最新の値に更新する。
@@ -55,7 +55,6 @@ public class LikesDestroyServlet extends HttpServlet {
             em.close();
             request.getSession().setAttribute("flush", "いいねを取り消しました。");
 
-            request.getSession().removeAttribute("report");
             response.sendRedirect(request.getContextPath() + "/reports/index");
         }
     }

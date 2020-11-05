@@ -50,12 +50,14 @@
                         <c:when  test="${ checkSameLikeFlag }">
                             <form method="POST" action="/daily_report_sample/likes/destroy">
                                 <input type = "hidden" name="_token" value="${_token }" />
+                                <input type = "hidden" name="_destroyLike" value="${report.id}" />
                                 <button type="submit">いいね済み</button>
                             </form>
                         </c:when>
                         <c:otherwise>
                             <form method="POST" action="/daily_report_sample/likes/create">
                                 <input type = "hidden" name="_token" value="${_token }" />
+                                <input type = "hidden" name="_createLike" value="${report.id}" />
                                 <button type="submit">いいね</button>
                             </form>
                         </c:otherwise>

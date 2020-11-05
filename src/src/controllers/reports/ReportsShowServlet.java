@@ -25,15 +25,12 @@ public class ReportsShowServlet extends HttpServlet {
 
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
-
         Report r = em.find(Report.class, Integer.parseInt(request.getParameter("id")));
 
-        // いいねの数をデータベースから取得して、変数likes_countに格納する。SQLでwhere以降、つまり条件式として必要なのはr.id。そちらを用意して引数として渡す必要がある。
         long likes_count =em.createNamedQuery("getReport'sLikeCount", Long.class)
                              .setParameter("report", r)
                              .getSingleResult();
 
-        // 同様のいいねレコードが存在していた場合、ビューでいいねリンクを表示させないためにフラグを立てる。
         Boolean checkSameLikeFlag = false;
         Like l = null;
         try {
@@ -42,7 +39,6 @@ public class ReportsShowServlet extends HttpServlet {
                       .setParameter("report", r)
                       .getSingleResult();
         } catch(NoResultException ex) {}
-
         if(l != null) {
             checkSameLikeFlag = true;
         }
@@ -51,9 +47,6 @@ public class ReportsShowServlet extends HttpServlet {
 
         request.setAttribute("report", r);
         request.setAttribute("_token", request.getSession().getId());
-        // LikeUpdateとLikeｓDestroyで参照中のレポートを扱うために、セッションにセットする。
-        request.getSession().setAttribute("report", r);
-        // SQLで取り出したいいね数と、ログイン中従業員IDと参照中のレポートIDをプロパティに持ついいねレコードがあるかどうかについてを送る。
         request.setAttribute("likes_count", likes_count);
         request.setAttribute("checkSameLikeFlag", checkSameLikeFlag);
 

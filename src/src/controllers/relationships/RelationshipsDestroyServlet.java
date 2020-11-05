@@ -23,19 +23,20 @@ public class RelationshipsDestroyServlet extends HttpServlet {
 
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
+
+        Employee e = em.find(Employee.class , Integer.parseInt(request.getParameter("_destroyRelationship")));
+
         Relationship r = em.createNamedQuery("checkRelationship", Relationship.class)
                 .setParameter("following", (Employee)request.getSession().getAttribute("login_employee"))
-                .setParameter("followed", (Employee)request.getSession().getAttribute("checking_employee"))
+                .setParameter( "followed" , e )
                 .getSingleResult();
 
         em.getTransaction().begin();
         em.remove(r);
         em.getTransaction().commit();
         em.close();
-        Employee e = (Employee)request.getSession().getAttribute("checking_employee");
-        request.getSession().setAttribute("flush", e.getName() + "のフォローを解除しました。");
+        request.getSession().setAttribute("flush", e.getName() + "さんのフォローを解除しました。");
 
-        request.getSession().removeAttribute("checking_employee");
         response.sendRedirect(request.getContextPath() + "/employees/index");
     }
 

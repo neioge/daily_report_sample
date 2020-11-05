@@ -43,17 +43,19 @@
                     </tbody>
                 </table>
 
-                <c:if test="${sessionScope.login_employee.id != sessionScope.checking_employee.id}">
+                <c:if test="${sessionScope.login_employee.id != employee.id}">
                     <c:choose>
                         <c:when  test="${ checkSameRelationshipFlag }">
                             <form method="POST" action="/daily_report_sample/relationships/destroy">
                                 <input type = "hidden" name="_token" value="${_token }" />
+                                <input type = "hidden" name="_destroyRelationship" value="${employee.id}" />
                                 <button type="submit">フォロー済み</button>
                             </form>
                         </c:when>
                         <c:otherwise>
                             <form method="POST" action="/daily_report_sample/relationships/create">
                                 <input type = "hidden" name="_token" value="${_token }" />
+                                <input type = "hidden" name="_createRelationship" value="${employee.id}" />
                                 <button type="submit">フォローする</button>
                             </form>
                         </c:otherwise>
@@ -61,6 +63,55 @@
                 </c:if>
 
                 <p><a href="<c:url value='/employees/edit?id=${employee.id}' />">この従業員情報を編集する</a></p>
+
+                <h2>フォローしている従業員　一覧</h2>
+                <table id="employee_list">
+                    <tbody>
+                        <tr>
+                            <th>社員番号</th>
+                            <th>氏名</th>
+                            <th>操作</th>
+                        </tr>
+                        <c:forEach var="relationship" items="${relationships}" varStatus="status">
+                            <tr class="row${status.count % 2}">
+                                <td><c:out value="${relationship.followed.code}" /></td>
+                                <td><c:out value="${relationship.followed.name}" /></td>
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${relationship.followed.delete_flag == 1}">
+                                            （削除済み）
+                                        </c:when>
+                                        <c:otherwise>
+                                            <a href="<c:url value='/employees/show?id=${relationship.followed.id}' />">詳細を表示</a>
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
+
+                <h2>いいねした日報　一覧</h2>
+                <table id="report_list">
+                    <tbody>
+                        <tr>
+                            <th class="report_name">氏名</th>
+                            <th class="report_date">日付</th>
+                            <th class="report_title">タイトル</th>
+                            <th class="report_likes">いいね数</th>
+                            <th class="report_action">操作</th>
+                        </tr>
+                        <c:forEach var="like" items="${likes}" varStatus="status">
+                            <tr class="row${status.count % 2}">
+                                <td class="report_name"><c:out value="${like.report.employee.name}" /></td>
+                                <td class="report_date"><fmt:formatDate value='${like.report.report_date}' pattern='yyyy-MM-dd' /></td>
+                                <td class="report_title"><c:out value="${like.report.title}" /></td>
+                                <td class="report_likes"><c:out value="${like.report.report_liked}" /></td>
+                                <td class="report_action"><a href="<c:url value='/reports/show?id=${like.report.id}' />">詳細を見る</a></td>
+                            </tr>
+                        </c:forEach>
+                    </tbody>
+                </table>
             </c:when>
             <c:otherwise>
                 <h2>お探しのデータは見つかりませんでした。</h2>

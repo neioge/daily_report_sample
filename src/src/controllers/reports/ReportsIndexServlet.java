@@ -35,6 +35,7 @@ public class ReportsIndexServlet extends HttpServlet {
                                   .setMaxResults(15)
                                   .getResultList();
 
+        // 基本的にこのやり方は間違っている。要修正。
         for (Report report : reports) {
             long liked_count =em.createNamedQuery("getReport'sLikeCount", Long.class)
                     .setParameter("report", report)
