@@ -18,7 +18,6 @@ import src.utils.EncryptUtil;
 @WebServlet("/login")
 public class LoginServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
     public LoginServlet() {
         super();
     }
@@ -29,25 +28,20 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");
         }
-
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/login/login.jsp");
         rd.forward(request, response);
     }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         Boolean check_result = false;
         String code = request.getParameter("code");
         String plain_pass = request.getParameter("password");
         Employee e = null;
-
         if(code != null && !code.equals("") && plain_pass != null && !plain_pass.equals("")) {
             EntityManager em = DBUtil.createEntityManager();
-
             String password = EncryptUtil.getPasswordEncrypt(
                     plain_pass,
                     (String)this.getServletContext().getAttribute("pepper")
                     );
-
             try {
                 e = em.createNamedQuery("checkLoginCodeAndPassword", Employee.class)
                       .setParameter("code", code)
@@ -59,7 +53,6 @@ public class LoginServlet extends HttpServlet {
                 check_result = true;
             }
         }
-
         if(!check_result) {
             request.setAttribute("_token", request.getSession().getId());
             request.setAttribute("hasError", true);

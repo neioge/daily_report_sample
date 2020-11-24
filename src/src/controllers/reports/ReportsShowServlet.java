@@ -22,15 +22,12 @@ public class ReportsShowServlet extends HttpServlet {
     public ReportsShowServlet() {
         super();
     }
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
         Report r = em.find(Report.class, Integer.parseInt(request.getParameter("id")));
-
         long likes_count =em.createNamedQuery("getReport'sLikeCount", Long.class)
                              .setParameter("report", r)
                              .getSingleResult();
-
         Boolean checkSameLikeFlag = false;
         Like l = null;
         try {
@@ -42,16 +39,12 @@ public class ReportsShowServlet extends HttpServlet {
         if(l != null) {
             checkSameLikeFlag = true;
         }
-
         em.close();
-
         request.setAttribute("report", r);
         request.setAttribute("_token", request.getSession().getId());
         request.setAttribute("likes_count", likes_count);
         request.setAttribute("checkSameLikeFlag", checkSameLikeFlag);
-
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/show.jsp");
         rd.forward(request, response);
     }
-
 }

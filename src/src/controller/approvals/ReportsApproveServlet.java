@@ -1,7 +1,6 @@
-package src.controllers.employees;
+package src.controller.approvals;
 
 import java.io.IOException;
-import java.sql.Timestamp;
 
 import javax.persistence.EntityManager;
 import javax.servlet.ServletException;
@@ -10,28 +9,27 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import src.models.Employee;
+import src.models.Report;
 import src.utils.DBUtil;
 
-@WebServlet("/employees/destroy")
-public class EmployeesDestroyServlet extends HttpServlet {
+@WebServlet("/reports/approve")
+public class ReportsApproveServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    public EmployeesDestroyServlet() {
+    public ReportsApproveServlet() {
         super();
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         String _token = (String)request.getParameter("_token");
         if(_token != null && _token.equals(request.getSession().getId())) {
             EntityManager em = DBUtil.createEntityManager();
-            Employee e = em.find(Employee.class, (Integer)(request.getSession().getAttribute("employee_id")));
-            e.setDelete_flag(1);
-            e.setUpdated_at(new Timestamp(System.currentTimeMillis()));
+            Report r = em.find(Report.class, Integer.parseInt(request.getParameter("_approveReport")));
+            r.setApproval(true);
+
             em.getTransaction().begin();
             em.getTransaction().commit();
             em.close();
-            request.getSession().setAttribute("flush", "削除が完了しました。");
-            response.sendRedirect(request.getContextPath() + "/employees/index");
+            request.getSession().setAttribute("flush", "承認しました");
+            response.sendRedirect(request.getContextPath() + "/reports/index");
         }
     }
-
 }

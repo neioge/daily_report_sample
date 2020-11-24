@@ -28,6 +28,10 @@ import javax.persistence.Table;
             name ="getAllLikes",
             query = "SELECT l FROM Like AS l WHERE l.employee = :employee"
     ),
+    @NamedQuery(
+             name = "getAllLikesAboutTheReport",
+             query = "select l from Like as l where l.report = :report"
+             ),
 })
 
 @Entity

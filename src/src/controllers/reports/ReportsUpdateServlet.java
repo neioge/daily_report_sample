@@ -28,22 +28,17 @@ public class ReportsUpdateServlet extends HttpServlet {
         String _token = (String)request.getParameter("_token");
         if(_token != null && _token.equals(request.getSession().getId())) {
             EntityManager em = DBUtil.createEntityManager();
-
             Report r = em.find(Report.class, (Integer)(request.getSession().getAttribute("report_id")));
-
             r.setReport_date(Date.valueOf(request.getParameter("report_date")));
             r.setTitle(request.getParameter("title"));
             r.setContent(request.getParameter("content"));
             r.setUpdated_at(new Timestamp(System.currentTimeMillis()));
-
             List<String> errors = ReportValidator.validate(r);
             if(errors.size() > 0) {
                 em.close();
-
                 request.setAttribute("_token", request.getSession().getId());
                 request.setAttribute("report", r);
                 request.setAttribute("errors", errors);
-
                 RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/edit.jsp");
                 rd.forward(request, response);
             } else {
@@ -51,12 +46,9 @@ public class ReportsUpdateServlet extends HttpServlet {
                 em.getTransaction().commit();
                 em.close();
                 request.getSession().setAttribute("flush", "更新が完了しました。");
-
                 request.getSession().removeAttribute("report_id");
-
                 response.sendRedirect(request.getContextPath() + "/reports/index");
             }
         }
     }
-
 }

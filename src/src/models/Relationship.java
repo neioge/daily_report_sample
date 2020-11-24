@@ -36,10 +36,6 @@ import javax.persistence.Table;
             name = "getFollowedCount",
             query = "SELECT COUNT(r) FROM Relationship AS r WHERE r.followed = :followed"
     ),
-    @NamedQuery(
-            name = "getMyAllRelationships",
-            query = "SELECT r FROM Relationship AS r WHERE r.following = :employee"
-   ),
 })
 
 @Entity

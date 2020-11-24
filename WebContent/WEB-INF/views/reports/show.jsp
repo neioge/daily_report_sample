@@ -39,6 +39,19 @@
                             <th>いいね数</th>
                             <td><c:out value="${ likes_count }" /></td>
                         </tr>
+                        <tr>
+                            <th>承認状態</th>
+                            <td>
+                                <c:choose>
+                                    <c:when test="${ report.approval }">
+                                    承認済み
+                                    </c:when>
+                                    <c:otherwise>
+                                    未承認
+                                    </c:otherwise>
+                                </c:choose>
+                            </td>
+                        </tr>
                     </tbody>
                 </table>
 
@@ -51,18 +64,30 @@
                             <form method="POST" action="/daily_report_sample/likes/destroy">
                                 <input type = "hidden" name="_token" value="${_token }" />
                                 <input type = "hidden" name="_destroyLike" value="${report.id}" />
-                                <button type="submit">いいね済み</button>
+                                <button class="buttonLiked" type="submit">
+                                    <span class="nomal">いいね済み</span>
+                                    <span class="hover">いいね取消</span>
+                                </button>
                             </form>
                         </c:when>
                         <c:otherwise>
                             <form method="POST" action="/daily_report_sample/likes/create">
                                 <input type = "hidden" name="_token" value="${_token }" />
                                 <input type = "hidden" name="_createLike" value="${report.id}" />
-                                <button type="submit">いいね</button>
+                                <button class = "buttonLike" type="submit">いいね</button>
                             </form>
                         </c:otherwise>
                     </c:choose>
                 </c:if>
+                <c:if test="${sessionScope.login_employee.admin_flag > 0}">
+                    <c:if test="${report.approval == false}">
+                        <form method="POST" action="${pageContext.request.contextPath}/reports/approve">
+                            <input type = "hidden" name="_token" value="${_token }" />
+                            <input type = "hidden" name="_approveReport" value="${report.id}" />
+                            <button class="buttonApproval" type="submit">承認する</button>
+                        </form>
+                   </c:if>
+                </c:if>
             </c:when>
             <c:otherwise>
                 <h2>お探しのデータは見つかりませんでした。</h2>

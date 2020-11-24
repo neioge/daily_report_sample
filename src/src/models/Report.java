@@ -64,10 +64,12 @@ public class Report {
     @Column(name = "updated_at", nullable = false)
     private Timestamp updated_at;
 
+    @Column(name = "approval", nullable = false)
+        private Boolean approval;
+
     public Integer getId() {
         return id;
     }
-
     public void setId(Integer id) {
         this.id = id;
     }
@@ -75,7 +77,6 @@ public class Report {
     public Employee getEmployee() {
         return employee;
     }
-
     public void setEmployee(Employee employee) {
         this.employee = employee;
     }
@@ -83,7 +84,6 @@ public class Report {
     public Date getReport_date() {
         return report_date;
     }
-
     public void setReport_date(Date report_date) {
         this.report_date = report_date;
     }
@@ -91,7 +91,6 @@ public class Report {
     public String getTitle() {
         return title;
     }
-
     public void setTitle(String title) {
         this.title = title;
     }
@@ -99,7 +98,6 @@ public class Report {
     public String getContent() {
         return content;
     }
-
     public void setContent(String content) {
         this.content = content;
     }
@@ -107,7 +105,6 @@ public class Report {
     public Integer getReport_liked() {
         return report_liked;
     }
-
     public void setReport_liked(Integer report_liked) {
         this.report_liked = report_liked;
     }
@@ -115,7 +112,6 @@ public class Report {
     public Timestamp getCreated_at() {
         return created_at;
     }
-
     public void setCreated_at(Timestamp created_at) {
         this.created_at = created_at;
     }
@@ -123,8 +119,14 @@ public class Report {
     public Timestamp getUpdated_at() {
         return updated_at;
     }
-
     public void setUpdated_at(Timestamp updated_at) {
         this.updated_at = updated_at;
+    }
+
+    public Boolean getApproval() {
+        return approval;
+    }
+    public void setApproval(Boolean approval) {
+         this.approval = approval;
     }
 }

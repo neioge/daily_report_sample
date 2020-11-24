@@ -15,21 +15,19 @@ import javax.servlet.http.HttpServletResponse;
 import src.models.Employee;
 import src.models.Like;
 import src.models.Relationship;
+import src.models.Report;
 import src.utils.DBUtil;
 
 @WebServlet("/employees/show")
 public class EmployeesShowServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
     public EmployeesShowServlet() {
         super();
     }
-
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
         Employee e = em.find(Employee.class, Integer.parseInt(request.getParameter("id")));
         Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
-
         Boolean checkSameRelationshipFlag = false;
         Relationship r = null;
         try {
@@ -41,11 +39,15 @@ public class EmployeesShowServlet extends HttpServlet {
         if(r != null) {
             checkSameRelationshipFlag = true;
         }
-
-        List<Relationship> relationships = em.createNamedQuery("getMyAllRelationships" , Relationship.class)
-                .setParameter("employee", login_employee)
+        List<Report> reports = em.createNamedQuery("getMyAllReports", Report.class)
+                .setParameter("employee",e)
                 .getResultList();
-
+        List<Relationship> activeRelationships = em.createNamedQuery("getAllFollowing" , Relationship.class)
+                .setParameter("following", e)
+                .getResultList();
+        List<Relationship> passiveRelationships = em.createNamedQuery("getAllFollowed" , Relationship.class)
+                .setParameter("followed", e)
+                .getResultList();
         List<Like> likes = em.createNamedQuery("getAllLikes", Like.class)
                 .setParameter("employee", login_employee)
                 .getResultList();
@@ -57,16 +59,14 @@ public class EmployeesShowServlet extends HttpServlet {
                     .getSingleResult();
             like.getReport().setReport_liked((int)liked_count);
         }
-
         em.close();
-
         request.setAttribute("employee", e);
         request.setAttribute("checkSameRelationshipFlag", checkSameRelationshipFlag);
-        request.setAttribute("relationships", relationships);
+        request.setAttribute("reports", reports);
+        request.setAttribute("activeRelationships", activeRelationships);
+        request.setAttribute("passiveRelationships", passiveRelationships);
         request.setAttribute("likes", likes);
-
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/employees/show.jsp");
         rd.forward(request, response);
     }
-
 }

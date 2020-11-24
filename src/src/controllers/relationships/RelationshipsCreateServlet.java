@@ -17,30 +17,22 @@ import src.utils.DBUtil;
 @WebServlet("/relationships/create")
 public class RelationshipsCreateServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-
     public RelationshipsCreateServlet() {
         super();
     }
-
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-
         EntityManager em = DBUtil.createEntityManager();
-
         Relationship r = new Relationship();
         r.setFollowing((Employee)request.getSession().getAttribute("login_employee"));
         r.setFollowed( em.find(Employee.class, Integer.parseInt(request.getParameter("_createRelationship"))) );
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         r.setCreated_at(currentTime);
         r.setUpdated_at(currentTime);
-
         em.getTransaction().begin();
         em.persist(r);
         em.getTransaction().commit();
         em.close();
         request.getSession().setAttribute("flush", r.getFollowed().getName() + "さんをフォローしました");
-
         response.sendRedirect(request.getContextPath() + "/employees/index");
-
     }
-
 }
