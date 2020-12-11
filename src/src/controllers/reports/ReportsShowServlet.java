@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 
 import src.models.Employee;
 import src.models.Like;
+import src.models.Relationship;
 import src.models.Report;
 import src.utils.DBUtil;
 
@@ -39,11 +40,28 @@ public class ReportsShowServlet extends HttpServlet {
         if(l != null) {
             checkSameLikeFlag = true;
         }
+
+        //ここから、一般従業員でも従業員をフォローできるようにするために、リレーションシップが存在するかどうかのフラグをビューに渡すためのロジックを記述する。
+        Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
+        Boolean checkSameRelationshipFlag = false;
+        Relationship relationship = null;
+        try {
+        relationship = em.createNamedQuery("checkRelationship", Relationship.class)
+        .setParameter("following", login_employee)
+        .setParameter("followed", r.getEmployee())
+        .getSingleResult();
+        } catch(NoResultException ex) {}
+        if(relationship != null) {
+        checkSameRelationshipFlag = true;
+        }
+        //終わり
+
         em.close();
         request.setAttribute("report", r);
         request.setAttribute("_token", request.getSession().getId());
         request.setAttribute("likes_count", likes_count);
         request.setAttribute("checkSameLikeFlag", checkSameLikeFlag);
+        request.setAttribute("checkSameRelationshipFlag", checkSameRelationshipFlag);
         RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/reports/show.jsp");
         rd.forward(request, response);
     }

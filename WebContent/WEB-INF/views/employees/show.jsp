@@ -5,7 +5,7 @@
     <c:param name="content">
         <c:choose>
             <c:when test="${employee != null}">
-                <h2>id : ${employee.id} の従業員情報　詳細ページ</h2>
+                <h2>${employee.name} の従業員情報　詳細ページ</h2>
 
                 <table>
                     <tbody>
@@ -49,7 +49,7 @@
                             <form method="POST" action="/daily_report_sample/relationships/destroy">
                                 <input type = "hidden" name="_token" value="${_token }" />
                                 <input type = "hidden" name="_destroyRelationship" value="${employee.id}" />
-                                <button type="submit">フォロー済み</button>
+                                <button class="buttonFollowed" type="submit"><span class="nomal">フォロー済み</span><span class="hover">フォロー解除</span></button>
                             </form>
                         </c:when>
                         <c:otherwise>
@@ -72,7 +72,7 @@
                 </ul>
 
                 <section class="content active" id="reportsIndex">
-                    <table id="report_list">
+                    <table id="report_list">
                         <tbody>
                             <tr>
                                 <th class="report_name">氏名</th>
@@ -94,31 +94,31 @@
                     </table>
                 </section>
 
-                 <section class="content" id="followingIndex">
-                    <table id="employee_list">
-                       <tbody>
+                <section class="content" id="followingIndex">
+                    <table id="employee_list">
+                        <tbody>
                             <tr>
-                                <th>社員番号</th>
-                                <th>氏名</th>
-                                <th>操作</th>
-                            </tr>
-                            <c:forEach var="relationship" items="${activeRelationships}" varStatus="status">
-                                <tr class="row${status.count % 2}">
-                                    <td><c:out value="${relationship.followed.code}" /></td>
-                                    <td><c:out value="${relationship.followed.name}" /></td>
-                                    <td>
-                                    <c:choose>
-                                        <c:when test="${relationship.followed.delete_flag == 1}">
-                                        （削除済み）
-                                        </c:when>
-                                        <c:otherwise>
-                                            <a href="<c:url value='/employees/show?id=${relationship.followed.id}' />">詳細を表示</a>
-                                        </c:otherwise>
-                                    </c:choose>
-                                    </td>
-                                </tr>
-                            </c:forEach>
-                        </tbody>
+                               <th>社員番号</th>
+                               <th>氏名</th>
+                               <th>操作</th>
+                           </tr>
+                           <c:forEach var="relationship" items="${activeRelationships}" varStatus="status">
+                               <tr class="row${status.count % 2}">
+                                   <td><c:out value="${relationship.followed.code}" /></td>
+                                   <td><c:out value="${relationship.followed.name}" /></td>
+                                   <td>
+                                       <c:choose>
+                                           <c:when test="${relationship.followed.delete_flag == 1}">
+                                           （削除済み）
+                                           </c:when>
+                                           <c:otherwise>
+                                               <a href="<c:url value='/employees/show?id=${relationship.followed.id}' />">詳細を表示</a>
+                                           </c:otherwise>
+                                       </c:choose>
+                                   </td>
+                               </tr>
+                           </c:forEach>
+                      </tbody>
                     </table>
                 </section>
 
@@ -136,12 +136,12 @@
                                     <td><c:out value="${relationship.following.name}" /></td>
                                     <td>
                                         <c:choose>
-                                            <c:when test="${relationship.following.delete_flag == 1}">
-                                                                                            （削除済み）
-                                            </c:when>
-                                            <c:otherwise>
-                                               <a href="<c:url value='/employees/show?id=${relationship.following.id}' />">詳細を表示</a>
-                                            </c:otherwise>
+                                            <c:when test="${relationship.followed.delete_flag == 1}">
+                                        （削除済み）
+                                        </c:when>
+                                        <c:otherwise>
+                                           <a href="<c:url value='/employees/show?id=${relationship.following.id}' />">詳細を表示</a>
+                                        </c:otherwise>
                                         </c:choose>
                                     </td>
                                 </tr>

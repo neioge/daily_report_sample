@@ -26,8 +26,9 @@ public class RelationshipsDestroyServlet extends HttpServlet {
                 .setParameter("following", (Employee)request.getSession().getAttribute("login_employee"))
                 .setParameter( "followed" , e )
                 .getSingleResult();
+        r.setDelete_flag(1);
         em.getTransaction().begin();
-        em.remove(r);
+//        em.remove(r);
         em.getTransaction().commit();
         em.close();
         request.getSession().setAttribute("flush", e.getName() + "さんのフォローを解除しました。");

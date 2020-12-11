@@ -7,6 +7,7 @@
         <title>日報管理システム</title>
         <link rel="stylesheet" href="<c:url value='/css/reset.css' />">
         <link rel="stylesheet" href="<c:url value='/css/style.css' />">
+        <script src="<c:url value='/test.js' />"></script>
     </head>
     <body>
         <div id="wrapper">
@@ -34,5 +35,9 @@
                 by Taro Kirameki.
             </div>
         </div>
+
+        <script>
+        console.log('hello world');
+        </script>
     </body>
 </html>

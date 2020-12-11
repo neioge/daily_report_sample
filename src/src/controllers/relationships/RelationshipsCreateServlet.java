@@ -28,6 +28,7 @@ public class RelationshipsCreateServlet extends HttpServlet {
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
         r.setCreated_at(currentTime);
         r.setUpdated_at(currentTime);
+        r.setDelete_flag(0);
         em.getTransaction().begin();
         em.persist(r);
         em.getTransaction().commit();

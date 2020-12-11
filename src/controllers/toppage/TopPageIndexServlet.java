@@ -1,6 +1,7 @@
 package controllers.toppage;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.persistence.EntityManager;
@@ -12,6 +13,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import src.models.Employee;
+import src.models.Relationship;
 import src.models.Report;
 import src.utils.DBUtil;
 
@@ -44,10 +46,31 @@ public class TopPageIndexServlet extends HttpServlet {
         long reports_count = (long)em.createNamedQuery("getMyReportsCount", Long.class)
                                      .setParameter("employee", login_employee)
                                      .getSingleResult();
+
+        List<Report> timeline = new ArrayList<Report>();
+        List<Report> allReports = em.createNamedQuery("getAllReports", Report.class)
+                                     .getResultList();
+        List<Relationship> activeRelationships = em.createNamedQuery("getAllFollowing" , Relationship.class)
+                                     .setParameter("following", login_employee)
+                                     .getResultList();
+
+        for (Report report: allReports){
+            for (Relationship relationship: activeRelationships){
+                  if(relationship.getFollowed().getId() == report.getEmployee().getId()){
+                      long liked_count =em.createNamedQuery("getReport'sLikeCount", Long.class)
+                                            .setParameter("report", report)
+                                            .getSingleResult();
+                      report.setReport_liked((int)liked_count);
+                      timeline.add(report);
+                  }
+            }
+        }
+
         em.close();
         request.setAttribute("reports", reports);
         request.setAttribute("reports_count", reports_count);
         request.setAttribute("page", page);
+        request.setAttribute("timeline", timeline);
         if(request.getSession().getAttribute("flush") != null) {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");
