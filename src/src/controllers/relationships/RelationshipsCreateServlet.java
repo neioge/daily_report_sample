@@ -34,6 +34,6 @@ public class RelationshipsCreateServlet extends HttpServlet {
         em.getTransaction().commit();
         em.close();
         request.getSession().setAttribute("flush", r.getFollowed().getName() + "さんをフォローしました");
-        response.sendRedirect(request.getContextPath() + "/employees/index");
+        response.sendRedirect(request.getContextPath() + "/reports/index");
     }
 }

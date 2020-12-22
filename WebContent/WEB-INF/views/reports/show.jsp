@@ -62,14 +62,12 @@
                     <c:choose>
                         <c:when  test="${ checkSameLikeFlag }">
                             <form method="POST" action="/daily_report_sample/likes/destroy">
-                                <input type = "hidden" name="_token" value="${_token }" />
                                 <input type = "hidden" name="_destroyLike" value="${report.id}" />
                                 <button class="buttonLiked" type="submit"><span class="nomal">いいね済み</span><span class="hover">いいね取消</span></button>
                             </form>
                         </c:when>
                         <c:otherwise>
                             <form method="POST" action="/daily_report_sample/likes/create">
-                                <input type = "hidden" name="_token" value="${_token }" />
                                 <input type = "hidden" name="_createLike" value="${report.id}" />
                                 <button class = "buttonLike" type="submit">いいね</button>
                             </form>
@@ -86,26 +84,23 @@
                     </c:if>
                 </c:if>
 
-                <c:if test="${sessionScope.login_employee.admin_flag == 0}">
                 <c:if test="${sessionScope.login_employee.id != report.employee.id}">
-                <c:choose>
-                <c:when  test="${ checkSameRelationshipFlag }">
-                <form method="POST" action="/daily_report_sample/relationships/destroy">
-                <input type = "hidden" name="_token" value="${_token }" />
-                <input type = "hidden" name="_destroyRelationship" value="${report.employee.id}" />
-                <button class="buttonFollowed" type="submit"><span class="nomal">フォロー済み</span><span class="hover">フォロー解除</span></button>
-                </form>
-                </c:when>
-                <c:otherwise>
-                <form method="POST" action="/daily_report_sample/relationships/create">
-                <input type = "hidden" name="_token" value="${_token }" />
-                <input type = "hidden" name="_createRelationship" value="${report.employee.id}" />
-                <button type="submit">作成者をフォロー</button>
-                </form>
-                </c:otherwise>
-                </c:choose>
+                    <c:choose>
+                        <c:when  test="${ checkSameRelationshipFlag }">
+                            <form method="POST" action="/daily_report_sample/relationships/destroy">
+                                <input type = "hidden" name="_destroyRelationship" value="${report.employee.id}" />
+                                <button class="buttonFollowed" type="submit"><span class="nomal">作成者をフォロー済み</span><span class="hover">フォローを解除する</span></button>
+                            </form>
+                        </c:when>
+                        <c:otherwise>
+                            <form method="POST" action="/daily_report_sample/relationships/create">
+                                <input type = "hidden" name="_createRelationship" value="${report.employee.id}" />
+                                <button type="submit">作成者をフォロー</button>
+                            </form>
+                        </c:otherwise>
+                    </c:choose>
                 </c:if>
-                </c:if>
+
 
             </c:when>
             <c:otherwise>
