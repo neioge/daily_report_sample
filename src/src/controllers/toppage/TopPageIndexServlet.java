@@ -1,4 +1,4 @@
-package src.controller.timeline;
+package src.controllers.toppage;
 
 import java.io.IOException;
 import java.util.List;
@@ -15,48 +15,45 @@ import src.models.Employee;
 import src.models.Report;
 import src.utils.DBUtil;
 
-@WebServlet("/timeline")
-public class TimelineServlet extends HttpServlet {
+@WebServlet("/index.html")
+public class TopPageIndexServlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    public TimelineServlet() {
+    public TopPageIndexServlet() {
         super();
     }
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         EntityManager em = DBUtil.createEntityManager();
         Employee login_employee = (Employee)request.getSession().getAttribute("login_employee");
-
         int page;
         try{
             page = Integer.parseInt(request.getParameter("page"));
         } catch(Exception e) {
             page = 1;
         }
-
-        List<Report> timeline = em.createNamedQuery("getMyTimeline", Report.class)
-                                        .setParameter("employee", login_employee)
-                                        .setFirstResult(15 * (page - 1))
-                                        .setMaxResults(15)
-                                        .getResultList();
-        // 基本的にこのやり方は間違っている。要修正。
-        for (Report report : timeline) {
+        List<Report> reports = em.createNamedQuery("getMyAllReports", Report.class)
+                                  .setParameter("employee", login_employee)
+                                  .setFirstResult(15 * (page - 1))
+                                  .setMaxResults(15)
+                                  .getResultList();
+        for (Report report : reports) {
             long liked_count =em.createNamedQuery("getReport'sLikeCount", Long.class)
                     .setParameter("report", report)
                     .getSingleResult();
             report.setReport_liked((int)liked_count);
         }
-        long timeline_count = (long)em.createNamedQuery("getMyTimelineCount", Long.class)
-                                        .setParameter("employee", login_employee)
-                                        .getSingleResult();
+        long reports_count = (long)em.createNamedQuery("getMyReportsCount", Long.class)
+                                     .setParameter("employee", login_employee)
+                                     .getSingleResult();
 
         em.close();
+        request.setAttribute("reports", reports);
+        request.setAttribute("reports_count", reports_count);
         request.setAttribute("page", page);
-        request.setAttribute("timeline_count", timeline_count);
-        request.setAttribute("timeline", timeline);
         if(request.getSession().getAttribute("flush") != null) {
             request.setAttribute("flush", request.getSession().getAttribute("flush"));
             request.getSession().removeAttribute("flush");
         }
-        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/timeline/timeline.jsp");
+        RequestDispatcher rd = request.getRequestDispatcher("/WEB-INF/views/topPage/index.jsp");
         rd.forward(request, response);
     }
 

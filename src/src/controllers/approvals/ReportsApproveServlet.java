@@ -1,4 +1,4 @@
-package src.controller.approvals;
+package src.controllers.approvals;
 
 import java.io.IOException;
 
